@@ -7,7 +7,7 @@ function start_html_server() {
 
   const server = http.createServer(function(request, response) {
      switch (request.url) {
-       case "/style.css" :
+       case "/styles.css" :
          response.writeHead(200, {"Content-Type": "text/css"});
          css = fs.readFileSync('./style.css', 'utf8');
          response.write(css);
