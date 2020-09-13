@@ -2,9 +2,10 @@
 // We are 'hiding' the top 20 rows, so the board will apear 10 x 20
 
 class Board {
-  constructor(ctx, ctxNext) {
+  constructor(ctx, ctxNext, ctxHold) {
     this.ctx = ctx;
     this.ctxNext = ctxNext;
+    this.ctxHold = ctxHold;
     this.init();
   }
 
@@ -17,8 +18,15 @@ class Board {
     this.ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
   }
 
+  clearHoldBox() {
+    const { width, height } = this.ctxHold.canvas;
+    this.ctxHold.clearRect(0, 0, width, height);
+    this.ctxHold.piece = false;
+  }
+
   reset() {
     this.grid = this.getEmptyGrid();
+    this.clearHoldBox();
     this.piece = new Piece(this.ctx);
     this.piece.setStartingPosition();
     this.getNewPiece();
@@ -153,6 +161,39 @@ class Board {
     }
 
     return p;
+  }
+
+  swapPieces() {
+    if (!this.ctxHold.piece) {
+      // move currentPiece to hold and move nextPiece to board
+      this.ctxHold.piece = this.piece;
+      this.piece = this.next;
+      this.getNewPiece();
+    } else {
+      // swap current piece with ctxHold.piece
+      let temp = this.piece
+      this.piece = this.ctxHold.piece;
+      this.ctxHold.piece = temp;
+    }
+    this.ctxHold.piece.ctx = this.ctxHold;
+    this.piece.ctx = this.ctx;
+    this.piece.setStartingPosition();
+    this.hold = this.ctxHold.piece;
+    const { width, height } = this.ctxHold.canvas;
+    this.ctxHold.clearRect(0, 0, width, height);
+    this.ctxHold.piece.x = 0;
+    this.ctxHold.piece.y = 0;
+    this.ctxHold.piece.draw();
+  }
+
+  swap() {
+    // only swap once.
+    if (this.piece.swapped) {
+      return;
+    }
+    this.swapPieces();
+    this.piece.swapped = true;
+    return this.piece;
   }
 
   getLinesClearedPoints(lines, level) {

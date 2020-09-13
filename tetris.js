@@ -1,7 +1,12 @@
+// canvas for game board
 const canvas = document.getElementById('board');
 const ctx = canvas.getContext('2d');
+// canvas for 'next' piece
 const canvasNext = document.getElementById('next');
 const ctxNext = canvasNext.getContext('2d');
+// canvas for 'hold' piecce
+const canvasHold = document.getElementById('hold');
+const ctxHold = canvasHold.getContext('2d');
 
 let accountValues = {
   score: 0,
@@ -24,27 +29,26 @@ let account = new Proxy(accountValues, {
   }
 });
 
-let requestId = null;
-let time = null;
-
 moves = {
-  [KEY.LEFT]: (p) => ({ ...p, x: p.x - 1 }),
-  [KEY.RIGHT]: (p) => ({ ...p, x: p.x + 1 }),
-  [KEY.DOWN]: (p) => ({ ...p, y: p.y + 1 }),
-  [KEY.SPACE]: (p) => ({ ...p, y: p.y + 1 }),
-  [KEY.UP]: (p) => board.rotate(p, ROTATION.RIGHT),
-  [KEY.Q]: (p) => board.rotate(p, ROTATION.LEFT)
+  [KEY.LEFT]:   (p) => ({ ...p, x: p.x - 1 }),
+  [KEY.RIGHT]:  (p) => ({ ...p, x: p.x + 1 }),
+  [KEY.DOWN]:   (p) => ({ ...p, y: p.y + 1 }),
+  [KEY.SPACE]:  (p) => ({ ...p, y: p.y + 1 }),
+  [KEY.UP]:     (p) => board.rotate(p, ROTATION.RIGHT),
+  [KEY.Q]:      (p) => board.rotate(p, ROTATION.LEFT),
+  [KEY.C]:      (p) => board.swap()
 };
 
-let board = new Board(ctx, ctxNext);
+let board = new Board(ctx, ctxNext, ctxHold);
 
-initNext();
+initSidePanel(ctxNext);
+initSidePanel(ctxHold);
 
-function initNext() {
+function initSidePanel(ctx) {
   // Calculate size of canvas from constants.
-  ctxNext.canvas.width = 4 * BLOCK_SIZE;
-  ctxNext.canvas.height = 4 * BLOCK_SIZE;
-  ctxNext.scale(BLOCK_SIZE, BLOCK_SIZE);
+  ctx.canvas.width = 4 * BLOCK_SIZE;
+  ctx.canvas.height = 4 * BLOCK_SIZE;
+  ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 }
 
 function addEventListener() {
@@ -86,6 +90,9 @@ function resetGame() {
   board.reset();
   time = { start: performance.now(), elapsed: 0, level: LEVEL[account.level] };
 }
+
+let requestId = null;
+let time = null;
 
 function play() {
   addEventListener();
