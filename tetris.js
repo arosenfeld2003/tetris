@@ -61,10 +61,12 @@ function addEventListener() {
 
 function handleKeyPress(event) {
   if (event.keyCode === KEY.P) {
+    audioElement.pause();
     pause();
   }
   if (event.keyCode === KEY.ESC) {
     audioElement.pause();
+    audioElement.currrentTime = 0;
     end.play();
     gameOver();
   } else if (moves[event.keyCode]) {
@@ -124,6 +126,7 @@ function animate(now = 0) {
     time.start = now;
     if (!board.drop()) {
       audioElement.pause();
+      audioElement.currentTime = 0;
       gameOver();
       return;
     }
@@ -138,6 +141,7 @@ function animate(now = 0) {
 
 function gameOver() {
   cancelAnimationFrame(requestId);
+  requestId = null;
   ctx.fillStyle = 'black';
   ctx.fillRect(1, 3, 8, 1.2);
   ctx.font = '1px Arial';
@@ -163,8 +167,15 @@ function pause() {
 
 function timer(e) {
   if (requestId) {
+    audioElement.pause();
     pause();
   } else {
+    let isPaused = ctx.paused;
+    if (!isPaused) {
+      // new game ==> clear grid and reset background music.
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      audioElement.currentTime = 0;
+    }
     let count = 3;
     document.getElementById('timer').innerHTML = count;
     let counter = setInterval(countdown, 1000);
@@ -173,13 +184,13 @@ function timer(e) {
       document.getElementById('timer').innerHTML = count;
       if (count <= 0) {
         clearInterval(counter);
-        if (ctx.paused === undefined) {
-          // new game.
+        if (!isPaused) {
           play();
         } else {
           // resume from paused.
           ctx.paused = false;
           document.getElementById("timer").innerHTML = '';
+          audioElement.play();
           animate();
           return;
         }
