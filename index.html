@@ -3,31 +3,60 @@
   <head>
     <meta charset="utf8">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="icon" type="image/png" href="./images/39312.png"/>
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <title>My Tetris</title>
   </head>
   <body>
-    <div class="grid">
-      <canvas id="board" class="game-board"></canvas>
-      <div class="right-column">
-        <div>
-          <h1>TETRIS</h1>
-          <p>Score: <span id="score">0</span></p>
-          <p>Lines: <span id="lines">0</span></p>
-          <p>Level: <span id="level">0</span></p>
-          <p class="piece-label">Next: </p>
-          <canvas id="next" class="next"></canvas>
-          <p class="piece-label">Hold: </p>
-          <canvas id="hold" class="hold"></canvas>
+    <div class="container mt-3">
+      <div class="d-flex">
+        <div class="col-3">
+          <span id="timer"></span>
+          <button onclick="timer(this)" class="play-button">Start/Pause</button>
+          <button class="music-button" data-playing="false" role="switch" aria-checked="false">
+            <span>Music On/Off</span>
+          </button>
         </div>
-        <button onclick="play()" class="play-button">New Game</button>
+        <div class="col-3">
+          <div class="grid">
+            <canvas id="board" class="game-board">
+            </canvas>
+            <div class="right-column col-3">
+              <div>
+                <img src="./images/logo.jpg">
+                <p>Score: <span id="score">0</span></p>
+                <p>Lines: <span id="lines">0</span></p>
+                <p>Level: <span id="level">0</span></p>
+                <p class="piece-label">Next: </p>
+                <canvas id="next" class="next"></canvas>
+                <p class="piece-label">Hold: </p>
+                <canvas id="hold" class="hold"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
+    <audio src='https://upload.wikimedia.org/wikipedia/commons/e/e5/Tetris_theme.ogg'></audio>
     <script type="text/javascript" src="constants.js"></script>
     <script type="text/javascript" src="playfield.js"></script>
     <script type="text/javascript" src="tetrominos.js"></script>
     <script type="text/javascript" src="tetris.js"></script>
+    <script type="text/javascript" src="audio.js"></script>
   </body>
+  <footer class="footer mt-3">
+    <div class="container">
+      <span class="text-muted footer">
+        Tetris © 1985~2020 Tetris Holding.
+        Tetris logos, Tetris theme song and Tetriminos
+        are trademarks of Tetris Holding.
+        The Tetris trade dress is owned by Tetris Holding.
+        Licensed to The Tetris Company. Tetris Game Design by Alexey Pajitnov.
+        Tetris Logo Design by Roger Dean. All Rights Reserved.
+      </span>
+    </div>
+  </footer>
 </html>

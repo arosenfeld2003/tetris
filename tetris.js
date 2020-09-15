@@ -7,6 +7,10 @@ const ctxNext = canvasNext.getContext('2d');
 const canvasHold = document.getElementById('hold');
 const ctxHold = canvasHold.getContext('2d');
 
+// background music
+const audioElement = document.querySelector('audio');
+const playButton = document.querySelector('.music-button');
+
 let accountValues = {
   score: 0,
   level: 0,
@@ -60,6 +64,8 @@ function handleKeyPress(event) {
     pause();
   }
   if (event.keyCode === KEY.ESC) {
+    audioElement.pause();
+    end.play();
     gameOver();
   } else if (moves[event.keyCode]) {
     event.preventDefault();
@@ -78,6 +84,9 @@ function handleKeyPress(event) {
       if (event.keyCode === KEY.DOWN) {
         account.score += POINTS.SOFT_DROP;
       }
+    } else {
+      // sound effect: hit a wall
+      fall.play();
     }
   }
 }
@@ -94,7 +103,11 @@ let requestId = null;
 let time = null;
 
 function play() {
+  ctx.paused = false;
   addEventListener();
+  // start background music
+  playButton.dataset.playing = 'true';
+  audioElement.play();
   resetGame();
 
   // If we have an old game running then cancel it
@@ -110,6 +123,7 @@ function animate(now = 0) {
   if (time.elapsed > time.level) {
     time.start = now;
     if (!board.drop()) {
+      audioElement.pause();
       gameOver();
       return;
     }
@@ -133,8 +147,8 @@ function gameOver() {
 
 function pause() {
   if (!requestId) {
-    animate();
-    return;
+    ctx.paused = true;
+    timer();
   }
 
   cancelAnimationFrame(requestId);
@@ -145,4 +159,33 @@ function pause() {
   ctx.font = '1px Arial';
   ctx.fillStyle = 'yellow';
   ctx.fillText('PAUSED', 3, 4);
+}
+
+function timer(e) {
+  if (requestId) {
+    pause();
+  } else {
+    let count = 3;
+    document.getElementById('timer').innerHTML = count;
+    let counter = setInterval(countdown, 1000);
+    function countdown() {
+      count -= 1;
+      document.getElementById('timer').innerHTML = count;
+      if (count <= 0) {
+        clearInterval(counter);
+        if (ctx.paused === undefined) {
+          // new game.
+          play();
+        } else {
+          // resume from paused.
+          ctx.paused = false;
+          document.getElementById("timer").innerHTML = '';
+          animate();
+          return;
+        }
+        document.getElementById("timer").innerHTML = '';
+        return;
+      }
+    }
+  }
 }

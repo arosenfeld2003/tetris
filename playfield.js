@@ -50,8 +50,10 @@ class Board {
       this.clearLines();
       if (this.piece.y === 0) {
         // Game over
+        gameover.play();
         return false;
       }
+      fall.play();
       this.piece = this.next;
       this.piece.ctx = this.ctx;
       this.piece.setStartingPosition();
@@ -70,7 +72,7 @@ class Board {
 
         // Remove the row.
         this.grid.splice(y, 1);
-
+        clear.play();
         // Add zero filled row at the top.
         this.grid.unshift(Array(COLS).fill(0));
       }
@@ -152,11 +154,12 @@ class Board {
       // Reverse the order of the columns.
       if (direction === ROTATION.RIGHT) {
         p.shape.forEach((row) => row.reverse());
+        rotate.play();
       } else if (direction === ROTATION.LEFT) {
         p.shape.reverse();
+        rotate.play();
       }
     }
-
     return p;
   }
 
