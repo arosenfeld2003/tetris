@@ -163,6 +163,7 @@ function pause() {
   ctx.font = '1px Arial';
   ctx.fillStyle = 'yellow';
   ctx.fillText('PAUSED', 3, 4);
+  ctx.paused = true;
 }
 
 function timer(e) {
