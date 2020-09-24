@@ -146,8 +146,8 @@ class Board {
     let p = JSON.parse(JSON.stringify(piece));
     if (!piece.hardDropped) {
       // Transpose matrix
-      for (let y = 0; y < p.shape.length; ++y) {
-        for (let x = 0; x < y; ++x) {
+      for (let y = 0; y < p.shape.length; y++) {
+        for (let x = 0; x < y; x++) {
           [p.shape[x][y], p.shape[y][x]] = [p.shape[y][x], p.shape[x][y]];
         }
       }

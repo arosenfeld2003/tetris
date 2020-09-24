@@ -87,7 +87,11 @@ function handleKeyPress(event) {
         account.score += POINTS.SOFT_DROP;
       }
     } else {
-      // sound effect: hit a wall
+      // new piece location is not valid
+      // we hit a wall or another piece...
+      // implement t-spin logic here?
+
+      // sound effect: hit a wall.
       fall.play();
     }
   }
@@ -116,7 +120,6 @@ function play() {
   if (requestId) {
     cancelAnimationFrame(requestId);
   }
-
   animate();
 }
 
